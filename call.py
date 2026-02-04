@@ -33,7 +33,14 @@ from AloneX.utils.formatters import check_duration, seconds_to_min, speed_conver
 from AloneX.utils.inline.play import stream_markup
 from AloneX.utils.thumbnails import gen_thumb as get_thumb
 from strings import get_string
-
+async def safe_delete(msg, delay=0):
+    try:
+        if delay:
+            await asyncio.sleep(delay)
+        await msg.delete()
+    except:
+        pass
+        
 autoend = {}
 counter = {}
 
@@ -294,12 +301,14 @@ class Call(PyTgCalls):
                 await cleanup_all_messages(chat_id)
                 await _clear_(chat_id)
                 await app.send_message(chat_id,"🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!")
+                asyncio.create_task(safe_delete(msg, 1800))
                 return await client.leave_call(chat_id)
         except:
             try:
                 await cleanup_all_messages(chat_id)
                 await _clear_(chat_id)
                 await app.send_message(chat_id,"🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!")
+                asyncio.create_task(safe_delete(msg, 1800))
                 return await client.leave_call(chat_id)
             except:
                 return
